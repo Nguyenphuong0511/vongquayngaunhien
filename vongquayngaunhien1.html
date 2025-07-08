@@ -1,0 +1,683 @@
+<!DOCTYPE html>
+<html data-theme="lofi" dir="ltr" lang="vi">
+
+<head>
+  <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+  <title>Vòng quay ngẫu nhiên - Quay random tên</title>
+  <meta name="description" content="Vòng quay giúp bạn đưa ra quyết định ngẫu nhiên. Dùng để chọn tên hoặc trả lời câu hỏi có/không.">
+  <meta name="twitter:card" content="summary">
+  <meta name="twitter:title" content="Vòng quay ngẫu nhiên - Quay random tên">
+  <meta name="twitter:description" content="Vòng quay giúp bạn đưa ra quyết định ngẫu nhiên. Dùng để chọn tên hoặc trả lời câu hỏi có/không.">
+  <meta name="twitter:url" content="https://ohmyluck.com/vi/">
+  <link rel="icon" href="https://ohmyluck.com/assets/icons/favicon.ico">
+  <link rel="apple-touch-icon" sizes="180x180" href="https://ohmyluck.com/assets/icons/apple-touch-icon.png">
+  <link rel="icon" type="image/png" sizes="32x32" href="https://ohmyluck.com/assets/icons/favicon-32x32.png">
+  <link rel="icon" type="image/png" sizes="16x16" href="https://ohmyluck.com/assets/icons/favicon-16x16.png">
+  <link rel="manifest" href="https://ohmyluck.com/assets/icons/site.webmanifest">
+  <link rel="canonical" href="https://ohmyluck.com/vi/">
+  <link rel="alternate" hreflang="x-default" href="https://ohmyluck.com/">
+  <link rel="alternate" hreflang="id" href="https://ohmyluck.com/id/">
+  <link rel="alternate" hreflang="de" href="https://ohmyluck.com/de/">
+  <link rel="alternate" hreflang="en" href="https://ohmyluck.com/">
+  <link rel="alternate" hreflang="es" href="https://ohmyluck.com/es/">
+  <link rel="alternate" hreflang="fr" href="https://ohmyluck.com/fr/">
+  <link rel="alternate" hreflang="it" href="https://ohmyluck.com/it/">
+  <link rel="alternate" hreflang="pl" href="https://ohmyluck.com/pl/">
+  <link rel="alternate" hreflang="pt" href="https://ohmyluck.com/pt/">
+  <link rel="alternate" hreflang="vi" href="https://ohmyluck.com/vi/">
+  <link rel="alternate" hreflang="tr" href="https://ohmyluck.com/tr/">
+  <link rel="alternate" hreflang="ru" href="https://ohmyluck.com/ru/">
+  <link rel="alternate" hreflang="th" href="https://ohmyluck.com/th/">
+  <link rel="alternate" hreflang="ko" href="https://ohmyluck.com/ko/">
+  <link rel="alternate" hreflang="zh-cn" href="https://ohmyluck.com/zh-cn/">
+  <link rel="alternate" hreflang="zh-tw" href="https://ohmyluck.com/zh-tw/">
+  <link rel="alternate" hreflang="ja" href="https://ohmyluck.com/ja/">
+  <link rel="stylesheet" href="main.css">
+  <script src="index.js" defer></script>
+  <link rel="dns-prefetch" href="https://pagead2.googlesyndication.com/">
+  <script src="./vongquayngaunhien/f.txt"></script>
+  <script async="" src="./vongquayngaunhien/f(1).txt" crossorigin="anonymous" data-checked-head="true"></script>
+  <meta http-equiv="origin-trial" content="AlK2UR5SkAlj8jjdEc9p3F3xuFYlF6LYjAML3EOqw1g26eCwWPjdmecULvBH5MVPoqKYrOfPhYVL71xAXI1IBQoAAAB8eyJvcmlnaW4iOiJodHRwczovL2RvdWJsZWNsaWNrLm5ldDo0NDMiLCJmZWF0dXJlIjoiV2ViVmlld1hSZXF1ZXN0ZWRXaXRoRGVwcmVjYXRpb24iLCJleHBpcnkiOjE3NTgwNjcxOTksImlzU3ViZG9tYWluIjp0cnVlfQ==">
+  <meta http-equiv="origin-trial" content="Amm8/NmvvQfhwCib6I7ZsmUxiSCfOxWxHayJwyU1r3gRIItzr7bNQid6O8ZYaE1GSQTa69WwhPC9flq/oYkRBwsAAACCeyJvcmlnaW4iOiJodHRwczovL2dvb2dsZXN5bmRpY2F0aW9uLmNvbTo0NDMiLCJmZWF0dXJlIjoiV2ViVmlld1hSZXF1ZXN0ZWRXaXRoRGVwcmVjYXRpb24iLCJleHBpcnkiOjE3NTgwNjcxOTksImlzU3ViZG9tYWluIjp0cnVlfQ==">
+  <meta http-equiv="origin-trial" content="A9wSqI5i0iwGdf6L1CERNdmsTPgVu44ewj8QxTBYgsv1LCPUVF7YmWOvTappqB1139jAymxUW/RO8zmMqo4zlAAAAACNeyJvcmlnaW4iOiJodHRwczovL2RvdWJsZWNsaWNrLm5ldDo0NDMiLCJmZWF0dXJlIjoiRmxlZGdlQmlkZGluZ0FuZEF1Y3Rpb25TZXJ2ZXIiLCJleHBpcnkiOjE3MzY4MTI4MDAsImlzU3ViZG9tYWluIjp0cnVlLCJpc1RoaXJkUGFydHkiOnRydWV9">
+  <meta http-equiv="origin-trial" content="A+d7vJfYtay4OUbdtRPZA3y7bKQLsxaMEPmxgfhBGqKXNrdkCQeJlUwqa6EBbSfjwFtJWTrWIioXeMW+y8bWAgQAAACTeyJvcmlnaW4iOiJodHRwczovL2dvb2dsZXN5bmRpY2F0aW9uLmNvbTo0NDMiLCJmZWF0dXJlIjoiRmxlZGdlQmlkZGluZ0FuZEF1Y3Rpb25TZXJ2ZXIiLCJleHBpcnkiOjE3MzY4MTI4MDAsImlzU3ViZG9tYWluIjp0cnVlLCJpc1RoaXJkUGFydHkiOnRydWV9">
+  <style>
+  @keyframes slide-in-one-tap {
+    from {
+      transform: translateY(80px);
+    }
+    to {
+      transform: translateY(0px);
+    }
+  }
+  
+  .trust-hide-gracefully {
+    opacity: 0;
+  }
+  
+  .trust-wallet-one-tap .hidden {
+      display: none;
+    }
+  
+  .trust-wallet-one-tap .semibold {
+      font-weight: 500;
+    }
+  
+  .trust-wallet-one-tap .binance-plex {
+      font-family: 'Binance';
+    }
+  
+  .trust-wallet-one-tap .rounded-full {
+      border-radius: 50%;
+    }
+  
+  .trust-wallet-one-tap .flex {
+      display: flex;
+    }
+  
+  .trust-wallet-one-tap .flex-col {
+      flex-direction: column;
+    }
+  
+  .trust-wallet-one-tap .items-center {
+      align-items: center;
+    }
+  
+  .trust-wallet-one-tap .space-between {
+      justify-content: space-between;
+    }
+  
+  .trust-wallet-one-tap .justify-center {
+      justify-content: center;
+    }
+  
+  .trust-wallet-one-tap .w-full {
+      width: 100%;
+    }
+  
+  .trust-wallet-one-tap .box {
+      transition: all 0.5s cubic-bezier(0, 0, 0, 1.43);
+      animation: slide-in-one-tap 0.5s cubic-bezier(0, 0, 0, 1.43);
+      width: 384px;
+      border-radius: 15px;
+      background: #fff;
+      box-shadow: 0px 2px 4px 0px rgba(0, 0, 0, 0.25);
+      position: fixed;
+      right: 30px;
+      bottom: 30px;
+      z-index: 1020;
+    }
+  
+  .trust-wallet-one-tap .header {
+      gap: 15px;
+      border-bottom: 1px solid #e6e6e6;
+      padding: 10px 18px;
+    }
+  
+  .trust-wallet-one-tap .header .left-items {
+        gap: 15px;
+      }
+  
+  .trust-wallet-one-tap .header .title {
+        color: #1e2329;
+        font-size: 18px;
+        font-weight: 600;
+        line-height: 28px;
+      }
+  
+  .trust-wallet-one-tap .header .subtitle {
+        color: #474d57;
+        font-size: 14px;
+        line-height: 20px;
+      }
+  
+  .trust-wallet-one-tap .header .close {
+        color: #1e2329;
+        cursor: pointer;
+      }
+  
+  .trust-wallet-one-tap .body {
+      padding: 9px 18px;
+      gap: 10px;
+    }
+  
+  .trust-wallet-one-tap .body .right-items {
+        gap: 10px;
+        width: 100%;
+      }
+  
+  .trust-wallet-one-tap .body .right-items .wallet-title {
+          color: #1e2329;
+          font-size: 16px;
+          font-weight: 600;
+          line-height: 20px;
+        }
+  
+  .trust-wallet-one-tap .body .right-items .wallet-subtitle {
+          color: #474d57;
+          font-size: 14px;
+          line-height: 20px;
+        }
+  
+  .trust-wallet-one-tap .connect-indicator {
+      gap: 15px;
+      padding: 8px 0;
+    }
+  
+  .trust-wallet-one-tap .connect-indicator .flow-icon {
+        color: #474d57;
+      }
+  
+  .trust-wallet-one-tap .loading-color {
+      color: #fff;
+    }
+  
+  .trust-wallet-one-tap .button {
+      border-radius: 50px;
+      outline: 2px solid transparent;
+      outline-offset: 2px;
+      background-color: rgb(5, 0, 255);
+      border-color: rgb(229, 231, 235);
+      cursor: pointer;
+      text-align: center;
+      height: 45px;
+    }
+  
+  .trust-wallet-one-tap .button .button-text {
+        color: #fff;
+        font-size: 16px;
+        font-weight: 600;
+        line-height: 20px;
+      }
+  
+  .trust-wallet-one-tap .footer {
+      margin: 20px 30px;
+    }
+  
+  .trust-wallet-one-tap .check-icon {
+      color: #fff;
+    }
+  
+  @font-face {
+    font-family: 'Binance';
+    src: url(chrome-extension://egjidjbpglichdcondbcbdnbeeppgdph/fonts/BinancePlex-Regular.otf) format('opentype');
+    font-weight: 400;
+    font-style: normal;
+  }
+  
+  @font-face {
+    font-family: 'Binance';
+    src: url(chrome-extension://egjidjbpglichdcondbcbdnbeeppgdph/fonts/BinancePlex-Medium.otf) format('opentype');
+    font-weight: 500;
+    font-style: normal;
+  }
+  
+  @font-face {
+    font-family: 'Binance';
+    src: url(chrome-extension://egjidjbpglichdcondbcbdnbeeppgdph/fonts/BinancePlex-SemiBold.otf) format('opentype');
+    font-weight: 600;
+    font-style: normal;
+  }
+  </style>
+  <script async="" src="./vongquayngaunhien/ca-pub-9320198138637130"></script>
+  <script async="" src="./vongquayngaunhien/AGSKWxWaGvX00_o1N6Kvrhy6T_qZAjRd9qRQeOv0HWTOgSIbC921CHhNq_aOwH6SMDX4liDnXdLazFB7rdiC3rkAt1F8EHVWnSu361eL5vK_q7bOrXEykKIDmFr9JmVLWm2aeMOIWrOwdg=="></script>
+  <script async="" src="./vongquayngaunhien/AGSKWxXiRieyyVwhl-sc9CN7_s46LydfquaF-AtG1h0xxgoVmxWendiwjGfzoR3qwAIepIA8-RrEhyt6prab3n4-OZem8VPrAODZ5oAGmUb9g1K2Cjn233vnz08w4aM_ZSvPYXbukuP3_A=="></script>
+  <script async="" src="./vongquayngaunhien/AGSKWxUzfqiMOsx26eyyG9Mj2nPpvEGlMsvl-2nhfQznne0jxn-alxxE4QfUU7e8tY543A-mXMHEYl1_-8dNuH2yB5xx-b74oaXTeg6AgHYZaw56f9iJJvzNaiheqBv16WbTtfOzX9Ng5g=="></script>
+  <!-- Thêm dòng này để dùng Tailwind qua CDN -->
+  <script src="https://cdn.tailwindcss.com"></script>
+  <!-- Firebase App (core) -->
+  <script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-app-compat.js"></script>
+  <!-- Firebase Realtime Database -->
+  <script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-database-compat.js"></script>
+  <script>
+  // Thay bằng config của bạn lấy từ Firebase Console
+    const firebaseConfig = {
+      apiKey: "AIzaSyDlyXIIXOko-fSaIoKVE5krvLwa2xjxT9Q",
+      authDomain: "vongquayngaunhien.firebaseapp.com",
+      databaseURL: "https://vongquayngaunhien-default-rtdb.asia-southeast1.firebasedatabase.app/",
+      projectId: "vongquayngaunhien",
+      storageBucket: "vongquayngaunhien.firebasestorage.app",
+      messagingSenderId: "1034597926307",
+      appId: "1:1034597926307:web:27d1954bc8316ca79fc616"
+    };
+    firebase.initializeApp(firebaseConfig);
+    const db = firebase.database();
+  </script>
+</head>
+
+<body class="bg-base-200" tabindex="-1">
+  <div id="in-page-channel-node-id" data-channel-name="in_page_channel_KxKnn6">
+  </div>
+  <nav class="navbar w-full border-b border-base-content/30">
+    <div class="navbar-start">
+      <div class="dropdown z-40">
+        <label tabindex="0" class="btn btn-ghost">
+          <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="h-5 w-5 stroke-current">
+            <path stroke-linecap="round" stroke-linejoin="round" d="M3.75 6.75h16.5M3.75 12h16.5m-16.5 5.25h16.5">
+            </path>
+          </svg>
+          <span class="ml-1 hidden md:block">Oh My Luck</span>
+        </label>
+        <ul tabindex="0" class="menu menu-compact dropdown-content mt-3 p-2 shadow bg-base-100 rounded-box w-60">
+          <li>
+            <a href="https://ohmyluck.com/vi/" class="flex gap-2 active">
+              <span class="flex-none">
+                <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round">
+                  <path stroke="none" d="M0 0h24v24H0z" fill="none">
+                  </path>
+                  <circle cx="12" cy="12" r="9">
+                  </circle>
+                  <line x1="3.6" y1="15" x2="14.15" y2="15">
+                  </line>
+                  <line x1="3.6" y1="15" x2="14.15" y2="15" transform="rotate(72 12 12)">
+                  </line>
+                  <line x1="3.6" y1="15" x2="14.15" y2="15" transform="rotate(144 12 12)">
+                  </line>
+                  <line x1="3.6" y1="15" x2="14.15" y2="15" transform="rotate(216 12 12)">
+                  </line>
+                  <line x1="3.6" y1="15" x2="14.15" y2="15" transform="rotate(288 12 12)">
+                  </line>
+                </svg>
+              </span>
+              <span class="flex-1">Vòng quay ngẫu nhiên</span>
+            </a>
+          </li>
+          <li>
+            <a href="https://ohmyluck.com/vi/coin-flipper/" class="flex gap-2 ">
+              <span class="flex-none">
+                <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round">
+                  <path stroke="none" d="M0 0h24v24H0z" fill="none">
+                  </path>
+                  <circle cx="12" cy="12" r="9">
+                  </circle>
+                  <path d="M14.8 9a2 2 0 0 0 -1.8 -1h-2a2 2 0 0 0 0 4h2a2 2 0 0 1 0 4h-2a2 2 0 0 1 -1.8 -1">
+                  </path>
+                  <path d="M12 6v2m0 8v2">
+                  </path>
+                </svg>
+              </span>
+              <span class="flex-1">Tung đồng xu</span>
+            </a>
+          </li>
+          <li>
+            <a href="https://ohmyluck.com/vi/dice-roller/" class="flex gap-2 ">
+              <span class="flex-none">
+                <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round">
+                  <path stroke="none" d="M0 0h24v24H0z" fill="none">
+                  </path>
+                  <rect x="4" y="4" width="16" height="16" rx="2">
+                  </rect>
+                  <circle cx="8.5" cy="8.5" r=".5" fill="currentColor">
+                  </circle>
+                  <circle cx="15.5" cy="8.5" r=".5" fill="currentColor">
+                  </circle>
+                  <circle cx="15.5" cy="15.5" r=".5" fill="currentColor">
+                  </circle>
+                  <circle cx="8.5" cy="15.5" r=".5" fill="currentColor">
+                  </circle>
+                </svg>
+              </span>
+              <span class="flex-1">Đổ xúc xắc</span>
+            </a>
+          </li>
+          <li>
+            <a href="https://ohmyluck.com/vi/random-country/" class="flex gap-2 ">
+              <span class="flex-none">
+                <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round">
+                  <path stroke="none" d="M0 0h24v24H0z" fill="none">
+                  </path>
+                  <circle cx="12" cy="10" r="4">
+                  </circle>
+                  <path d="M6.75 16a8.015 8.015 0 1 0 9.25 -13">
+                  </path>
+                  <line x1="12" y1="18" x2="12" y2="22">
+                  </line>
+                  <line x1="8" y1="22" x2="16" y2="22">
+                  </line>
+                </svg>
+              </span>
+              <span class="flex-1">Quốc gia ngẫu nhiên</span>
+            </a>
+          </li>
+          <li>
+            <a href="https://ohmyluck.com/vi/random-letter/" class="flex gap-2 ">
+              <span class="flex-none">
+                <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round">
+                  <path stroke="none" d="M0 0h24v24H0z" fill="none">
+                  </path>
+                  <path d="M7 20v-12a4 4 0 0 1 4 -4h2a4 4 0 0 1 4 4v12">
+                  </path>
+                  <line x1="7" y1="13" x2="17" y2="13">
+                  </line>
+                </svg>
+              </span>
+              <span class="flex-1">Random chữ</span>
+            </a>
+          </li>
+          <li>
+            <a href="https://ohmyluck.com/vi/random-number/" class="flex gap-2 ">
+              <span class="flex-none">
+                <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round">
+                  <path stroke="none" d="M0 0h24v24H0z" fill="none">
+                  </path>
+                  <path d="M8 10v-7l-2 2">
+                  </path>
+                  <path d="M6 16a2 2 0 1 1 4 0c0 .591 -.601 1.46 -1 2l-3 3.001h4">
+                  </path>
+                  <path d="M15 14a2 2 0 1 0 2 -2a2 2 0 1 0 -2 -2">
+                  </path>
+                  <path d="M6.5 10h3">
+                  </path>
+                </svg>
+              </span>
+              <span class="flex-1">Random số</span>
+            </a>
+          </li>
+          <li>
+            <a href="https://ohmyluck.com/vi/random-name/" class="flex gap-2 ">
+              <span class="flex-none">
+                <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round">
+                  <path stroke="none" d="M0 0h24v24H0z" fill="none">
+                  </path>
+                  <path d="M20 17v-12c0 -1.121 -.879 -2 -2 -2s-2 .879 -2 2v12l2 2l2 -2z">
+                  </path>
+                  <path d="M16 7h4">
+                  </path>
+                  <path d="M18 19h-13a2 2 0 1 1 0 -4h4a2 2 0 1 0 0 -4h-3">
+                  </path>
+                </svg>
+              </span>
+              <span class="flex-1">Random tên</span>
+            </a>
+          </li>
+          <li>
+            <a href="https://ohmyluck.com/vi/random-color/" class="flex gap-2 ">
+              <span class="flex-none">
+                <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round">
+                  <path stroke="none" d="M0 0h24v24H0z" fill="none">
+                  </path>
+                  <path d="M12 21a9 9 0 1 1 0 -18a9 8 0 0 1 9 8a4.5 4 0 0 1 -4.5 4h-2.5a2 2 0 0 0 -1 3.75a1.3 1.3 0 0 1 -1 2.25">
+                  </path>
+                  <circle cx="7.5" cy="10.5" r=".5" fill="currentColor">
+                  </circle>
+                  <circle cx="12" cy="7.5" r=".5" fill="currentColor">
+                  </circle>
+                  <circle cx="16.5" cy="10.5" r=".5" fill="currentColor">
+                  </circle>
+                </svg>
+              </span>
+              <span class="flex-1">Tạo màu ngẫu nhiên</span>
+            </a>
+          </li>
+          <li>
+            <a href="https://ohmyluck.com/vi/random-word/" class="flex gap-2 ">
+              <span class="flex-none">
+                <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round">
+                  <path stroke="none" d="M0 0h24v24H0z" fill="none">
+                  </path>
+                  <path d="M4 21v-13a3 3 0 0 1 3 -3h10a3 3 0 0 1 3 3v6a3 3 0 0 1 -3 3h-9l-4 4">
+                  </path>
+                  <path d="M10 14v-4a2 2 0 1 1 4 0v4">
+                  </path>
+                  <path d="M14 12h-4">
+                  </path>
+                </svg>
+              </span>
+              <span class="flex-1">Từ ngẫu nhiên</span>
+            </a>
+          </li>
+        </ul>
+      </div>
+    </div>
+    <div class="navbar-center">
+      <h1 class="font-bold normal-case text-lg sm:text-3xl max-w-[66vw] sm:max-w-full truncate">Vòng quay ngẫu nhiên</h1>
+    </div>
+    <div class="navbar-end">
+      <div class="dropdown dropdown-left z-40">
+        <label tabindex="0" class="btn btn-ghost">
+          <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="h-5 w-5">
+            <path stroke-linecap="round" stroke-linejoin="round" d="M10.5 21l5.25-11.25L21 21m-9-3h7.5M3 5.621a48.474 48.474 0 016-.371m0 0c1.12 0 2.233.038 3.334.114M9 5.25V3m3.334 2.364C11.176 10.658 7.69 15.08 3 17.502m9.334-12.138c.896.061 1.785.147 2.666.257m-4.589 8.495a18.023 18.023 0 01-3.827-5.802">
+            </path>
+          </svg>
+          <span class="hidden sm:block uppercase">vi</span>
+        </label>
+        <ul tabindex="0" class="mt-3 p-2 shadow menu menu-compact dropdown-content bg-base-100 flex-nowrap rounded-box w-48 max-h-48 overflow-y-scroll">
+          <li>
+            <a class="" href="https://ohmyluck.com/id/">Bahasa Indonesia</a>
+          </li>
+          <li>
+            <a class="" href="https://ohmyluck.com/de/">Deutsch</a>
+          </li>
+          <li>
+            <a class="" href="https://ohmyluck.com/">English</a>
+          </li>
+          <li>
+            <a class="" href="https://ohmyluck.com/es/">Español</a>
+          </li>
+          <li>
+            <a class="" href="https://ohmyluck.com/fr/">Français</a>
+          </li>
+          <li>
+            <a class="" href="https://ohmyluck.com/it/">Italiano</a>
+          </li>
+          <li>
+            <a class="" href="https://ohmyluck.com/pl/">Polski</a>
+          </li>
+          <li>
+            <a class="" href="https://ohmyluck.com/pt/">Português</a>
+          </li>
+          <li>
+            <a class="active" href="https://ohmyluck.com/vi/">Tiếng Việt</a>
+          </li>
+          <li>
+            <a class="" href="https://ohmyluck.com/tr/">Türkçe</a>
+          </li>
+          <li>
+            <a class="" href="https://ohmyluck.com/ru/">русский</a>
+          </li>
+          <li>
+            <a class="" href="https://ohmyluck.com/th/">ภาษาไทย</a>
+          </li>
+          <li>
+            <a class="" href="https://ohmyluck.com/ko/">한국어</a>
+          </li>
+          <li>
+            <a class="" href="https://ohmyluck.com/zh-cn/">简体中文</a>
+          </li>
+          <li>
+            <a class="" href="https://ohmyluck.com/zh-tw/">繁體中文</a>
+          </li>
+          <li>
+            <a class="" href="https://ohmyluck.com/ja/">日本語</a>
+          </li>
+        </ul>
+      </div>
+    </div>
+  </nav>
+  <main class="max-w-4xl mx-auto flex flex-col items-center justify-center min-h-screen py-8" id="main">
+    <div id="wheel" class="relative w-[400px] h-[400px] flex items-center justify-center mb-8 mx-auto">
+      <!-- Mũi tên chỉ ô -->
+      <div class="absolute z-20 top-0 left-1/2 -translate-x-1/2">
+        <div class="w-0 h-0 border-l-[24px] border-l-transparent border-r-[24px] border-r-transparent border-t-[40px] border-t-base-200">
+        </div>
+      </div>
+      <!-- Lỗ tròn ở giữa -->
+      <div class="absolute z-20 top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-16 h-16 bg-base-200 rounded-full border-4 border-white">
+      </div>
+    </div>
+    <div id="input-data" data-food-string="Phở, Bánh mì, Cơm tấm, Bún bò, Bánh xèo, Gỏi cuốn, Bún chả, Gà nướng, Cháo, Bò kho, Hủ tiếu, Mì Quảng, Cơm rang, Bánh cuốn, Canh chua, Cá kho, Bún riêu, Chả giò, Bò lúc lắc, Bánh canh, Cơm gà, Lẩu, Cánh gà, Bánh tráng nướng" data-yes-string="Có" data-no-string="Không" class="grid grid-cols-2 gap-4 justify-center w-full max-w-xl mb-4">
+      <button id="yes-no" class="btn btn-outline btn-secondary">Câu hỏi Có/Không</button>
+      <button id="food" class="btn btn-outline btn-secondary">Ăn gì?</button>
+    </div>
+    <div class="form-control w-full max-w-xl mb-4">
+      <label for="entries" class="label">
+        <span class="label-text">Danh sách mục</span>
+      </label>
+      <textarea data-error="" data-text="Quay" id="entries" class="textarea textarea-bordered" rows="3" placeholder="Nhập các tên trong danh sách tên của bạn. Tách riêng từng tên bằng dấu phẩy hoặc xuống một dòng mới.">Hùng, Minh, Dũng, Hương, Lan, Mai</textarea>
+    </div>
+    <!-- Thêm sau textarea nhập danh sách mục -->
+  <div class="w-full max-w-2xl mb-8">
+    <button id="pick" class="btn btn-primary w-full text-base py-3">Quay vòng</button>
+  </div>
+  <!-- HƯỚNG DẪN SỬ DỤNG -->
+  <section class="w-full max-w-2xl mx-auto mt-16 mb-12 px-4">
+    <style>
+      .guide-section h2 {
+        font-size: 1.3rem;
+        font-weight: 700;
+        margin-bottom: 1.25rem;
+        margin-top: 2.5rem;
+        letter-spacing: 0.01em;
+      }
+      .guide-section h2:first-child {
+        margin-top: 0;
+      }
+      .guide-section p, .guide-section ol, .guide-section ul {
+        font-size: 1rem;
+        line-height: 2.1;
+        margin-bottom: 2.2rem;
+        letter-spacing: 0.01em;
+      }
+      .guide-section ol {
+        padding-left: 1.5rem;
+        margin-bottom: 2.2rem;
+      }
+      .guide-section li {
+        margin-bottom: 0.7rem;
+        font-size: 1rem;
+        line-height: 2.1;
+        letter-spacing: 0.01em;
+      }
+      @media (max-width: 600px) {
+        .guide-section h2 { font-size: 1.1rem; }
+        .guide-section p, .guide-section li { font-size: 0.85rem; }
+      }
+    </style>
+    <div class="guide-section">
+      <h2>Vòng quay là gì?</h2>
+      <p>Vòng quay là công cụ trực tuyến giúp chọn <b>tên ngẫu nhiên</b> từ danh sách hoặc đưa ra các quyết định vui vẻ (như hôm nay ăn gì).</p>
+      <h2>Cách sử dụng vòng quay</h2>
+      <ol>
+        <li>Nhập các tên vào ô danh sách.</li>
+        <li>Nhấn nút "Quay vòng" để chọn.</li>
+        <li>Tên được chọn sẽ hiện trên màn hình. Nếu muốn, bạn có thể xóa tên đó khỏi danh sách bằng nút "Xóa".</li>
+      </ol>
+      <h2>Có thể gian lận vòng quay không?</h2>
+      <p>Không, không thể gian lận vòng quay. Các tên được chọn hoàn toàn ngẫu nhiên và mỗi tên có cơ hội được chọn như nhau. Điều này đảm bảo tính công bằng và minh bạch, hoàn hảo cho trò chơi và việc đưa ra quyết định.</p>
+      <h2>Tại sao nên dùng vòng quay này?</h2>
+      <p>Ngoài việc là vòng quay chọn tên, bạn còn có thể dùng nó để trả lời câu hỏi có/không. Thêm nhiều lựa chọn "có" hoặc "không" tuỳ ý để giúp đưa ra quyết định nhanh. Bạn cũng có thể dùng nó để chọn <b>quốc gia ngẫu nhiên</b> khi không biết đi đâu, hoặc thậm chí để quyết định ăn tối món gì.</p>
+      <h2>Điều khoản miễn trừ</h2>
+      <p>Vòng quay này chỉ dùng cho mục đích giáo dục và giải trí. Khi sử dụng, bạn đồng ý rằng chúng tôi không chịu trách nhiệm về bất kỳ thiệt hại hay kết quả phát sinh từ việc sử dụng nó.</p>
+    </div>
+  </section>
+</main>
+<div class="google-auto-placed" style="width: 100%; height: auto; clear: both; text-align: center;"><ins data-ad-format="auto" class="adsbygoogle adsbygoogle-noablate" data-ad-client="ca-pub-9320198138637130" data-adsbygoogle-status="done" style="display: block; margin: 10px auto 10px 0px; background-color: transparent; transition: none; outline: none; border: none; padding: 0px; border-spacing: 0px; width: 438px; z-index: 30; height: 0px;" data-ad-status="unfilled"><div id="aswift_3_host" style="border: none; height: 0px; width: 438px; margin: 0px; padding: 0px; position: relative; visibility: visible; background-color: transparent; display: inline-block; overflow: hidden; opacity: 0;"><iframe id="aswift_3" name="aswift_3" browsingtopics="true" style="left: 0px; position: absolute; top: 0px; border: 0px; width: 438px; height: 0px; min-height: auto; max-height: none; min-width: auto; max-width: none;" sandbox="allow-forms allow-popups allow-popups-to-escape-sandbox allow-same-origin allow-scripts allow-top-navigation-by-user-activation" width="438" height="0" frameborder="0" marginwidth="0" marginheight="0" vspace="0" hspace="0" allowtransparency="true" scrolling="no" allow="attribution-reporting; run-ad-auction" src="./vongquayngaunhien/ads(2).html" data-google-container-id="a!4" tabindex="0" title="Advertisement" aria-label="Advertisement" data-google-query-id="CK6X2vyxpY4DFVGYuQUdXQwuXA" data-load-complete="true"></iframe></div></ins></div>
+<footer class="footer footer-center p-6 bg-base-300 text-base-content rounded border-t border-base-content/20 mt-8">
+      <a href="https://ohmyluck.com/vi/privacy/" class="link link-hover">Chính sách Bảo mật</a>
+      <a href="https://ohmyluck.com/vi/terms/" class="link link-hover">Điều khoản Sử dụng</a>
+    </div>
+    <div>
+      <p>
+        <a class="link link-hover" href="https://ohmyluck.com/vi/">Oh My Luck</a>
+      </p>
+    </div>
+  </footer>
+  <canvas width="438" height="938" style="position: fixed; width: 100%; height: 100%; top: 0px; left: 0px; z-index: 1000; pointer-events: none;">
+  </canvas>
+  <dialog id="modal">
+    <form method="dialog" class="modal-box">
+      <h3 class="font-bold text-lg">Chúng ta có người chiến thắng!</h3>
+      <p id="winner" class="py-4 text-4xl font-bold text-center"></p>
+      <div class="modal-action flex justify-between">
+        <button id="close" class="btn btn-secondary">Đóng</button>
+        <button id="remove" class="btn btn-error">Xóa</button>
+      </div>
+    </form>
+  </dialog>
+  <!-- Thông báo ô admin muốn giữ lại cuối cùng -->
+<div id="forced-winner-info" style="margin-top: 2rem; text-align: center; color: #d97706; font-weight: bold;">
+  <span>Chọn ô muốn giữ lại cuối cùng (chỉ admin): </span>
+  <span id="forced-winner-value"></span>
+</div>
+  <script>
+const entriesTextarea = document.getElementById('entries');
+entriesTextarea.addEventListener('input', function() {
+    const entries = entriesTextarea.value
+        .split(/,|\n/)
+        .map(e => e.trim())
+        .filter(e => e);
+
+    db.ref('wheel/entries').set(entriesTextarea.value);
+
+    // Kiểm tra forcedWinnerValue có còn hợp lệ không
+    db.ref('wheel/forcedWinnerValue').once('value', function(snapshot) {
+        if (snapshot.exists() && snapshot.val() !== null && snapshot.val() !== "") {
+            const value = snapshot.val();
+            if (!entries.includes(value)) {
+                // forcedWinnerValue không còn hợp lệ, reset về null
+                db.ref('wheel/forcedWinnerValue').set(null);
+            }
+        }
+    });
+});
+</script>
+<script>
+document.getElementById('pick').onclick = async function() {
+    let entries = document.getElementById('entries').value
+        .split(/,|\n/)
+        .map(e => e.trim())
+        .filter(e => e);
+
+    let forcedValue = forcedWinnerValue;
+
+    if (forcedValue !== null && entries.length > 1 && entries.includes(forcedValue)) {
+        if (entries.length === 2) {
+            let other = entries.find(e => e !== forcedValue);
+            document.getElementById('winner').innerText = other;
+            document.getElementById('modal').showModal();
+            return;
+        }
+        let available = entries.filter(e => e !== forcedValue);
+        let randomValue = available[Math.floor(Math.random() * available.length)];
+        document.getElementById('winner').innerText = randomValue;
+        document.getElementById('modal').showModal();
+        return;
+    }
+    // Quay random bình thường
+    document.getElementById('winner').innerText = entries[Math.floor(Math.random() * entries.length)];
+    document.getElementById('modal').showModal();
+};
+</script>
+<script>
+document.getElementById('admin-logout-btn').onclick = function() {
+    db.ref('wheel/forcedWinnerValue').set(null);
+    // ...các lệnh khác...
+};
+</script>
+<script>
+let forcedWinnerValue = null;
+db.ref('wheel/forcedWinnerValue').on('value', function(snapshot) {
+    forcedWinnerValue = snapshot.exists() && snapshot.val() !== null && snapshot.val() !== "" ? snapshot.val() : null;
+    // Hiển thị cho người dùng
+    const infoDiv = document.getElementById('forced-winner-info');
+    const valueSpan = document.getElementById('forced-winner-value');
+    const entries = document.getElementById('entries').value
+        .split(/,|\n/)
+        .map(e => e.trim())
+        .filter(e => e);
+    if (
+        forcedWinnerValue !== null &&
+        entries.includes(forcedWinnerValue)
+    ) {
+        infoDiv.style.display = 'block';
+        valueSpan.textContent = forcedWinnerValue;
+    } else {
+        infoDiv.style.display = 'none';
+        valueSpan.textContent = '';
+    }
+});
+</script>
+</body>
+
+</html>
