@@ -1484,8 +1484,8 @@
 
                 // Quay vào ô sẽ bị loại
                 Q.init(X());
-                Q.spinToItem(removeIdx, 1200, true);
-                await new Promise(r => setTimeout(r, 1400));
+                Q.spinToItem(removeIdx, 2500, true);
+                await new Promise(r => setTimeout(r, 2700));
 
                 // Lưu lại thông tin chờ xác nhận
                 pendingRemoveIdx = removeIdx;
@@ -1559,8 +1559,8 @@ B.onclick = async function() {
 
         // Quay vào ô sẽ bị loại
         Q.init(X());
-        Q.spinToItem(removeIdx, 1200, true);
-        await new Promise(r => setTimeout(r, 1400));
+        Q.spinToItem(removeIdx, 2500, true);
+        await new Promise(r => setTimeout(r, 2700));
 
         // Lưu lại thông tin chờ xác nhận
         pendingRemoveIdx = removeIdx;

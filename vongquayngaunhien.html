@@ -715,8 +715,8 @@ firebase.database().ref('wheel/forcedWinnerValue').on('value', function(snapshot
 
             if (typeof Q !== 'undefined' && typeof Q.spinToItem === 'function') {
                 Q.init(tempEntries);
-                Q.spinToItem(removeIdx, 1200, true);
-                await new Promise(r => setTimeout(r, 1400));
+                Q.spinToItem(removeIdx, 2500, true);
+                await new Promise(r => setTimeout(r, 2700));
             }
 
             tempEntries.splice(removeIdx, 1);
