@@ -825,8 +825,18 @@
                 }
                 spinToItem(e = 0, t = 0, i = !0, n = 1, r = 1, s = null) {
                     this.stop(), this._dragEvents = [];
-                    let a = i ? this.items[e].getCenterAngle() : this.items[e].getRandomAngle(),
-                        o = m(this.rotation, a - this._pointerAngle, r);
+                    // Lấy góc bắt đầu và kết thúc của ô
+                    const itemAngles = this.getItemAngles();
+                    const startAngle = itemAngles[e].start;
+                    const endAngle = itemAngles[e].end;
+                    // Tạo độ lệch ngẫu nhiên trong phạm vi 80% giữa ô (tránh mép 10% mỗi bên)
+                    const range = endAngle - startAngle;
+                    const minOffset = range * 0.1;
+                    const maxOffset = range * 0.9;
+                    const randomOffset = minOffset + Math.random() * (maxOffset - minOffset);
+                    // Mũi tên sẽ dừng ở vị trí ngẫu nhiên trong 80% giữa ô
+                    let a = startAngle + randomOffset;
+                    let o = m(this.rotation, a - this._pointerAngle, r);
                     o += 360 * n * r, this.animate(o, t, s), this.raiseEvent_onSpin({
                         method: "spintoitem",
                         targetItemIndex: e,
@@ -1484,8 +1494,8 @@
 
                 // Quay vào ô sẽ bị loại
                 Q.init(X());
-                Q.spinToItem(removeIdx, 2500, true);
-                await new Promise(r => setTimeout(r, 2700));
+                Q.spinToItem(removeIdx, 3000, true);
+                await new Promise(r => setTimeout(r, 3000));
 
                 // Lưu lại thông tin chờ xác nhận
                 pendingRemoveIdx = removeIdx;
@@ -1559,8 +1569,8 @@ B.onclick = async function() {
 
         // Quay vào ô sẽ bị loại
         Q.init(X());
-        Q.spinToItem(removeIdx, 2500, true);
-        await new Promise(r => setTimeout(r, 2700));
+        Q.spinToItem(removeIdx, 3000, true);
+        await new Promise(r => setTimeout(r, 3000));
 
         // Lưu lại thông tin chờ xác nhận
         pendingRemoveIdx = removeIdx;
