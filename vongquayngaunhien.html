@@ -524,6 +524,32 @@
         <button id="set-winner" class="btn btn-primary">Chọn</button>
       </div>
     </div>
+    <!-- Giao diện chọn forcedSecondWinnerValue (chỉ giữ lại 1 block này, xóa các block khác nếu có) -->
+    <div id="admin-forced-second-winner" style="display:none; margin-bottom: 1rem;">
+      <label for="forced-second-winner-select" class="label">
+        <span class="label-text">Chọn ô muốn giữ lại cuối thứ 2 (chỉ admin):</span>
+      </label>
+      <div class="flex gap-2">
+        <select id="forced-second-winner-select" class="select select-bordered w-full max-w-xs">
+          <option value="">-- Không chọn --</option>
+        </select>
+        <button id="set-second-winner" class="btn btn-primary">Chọn</button>
+      </div>
+      <span id="forced-second-winner-value" style="color:#d97706;font-weight:bold;margin-left:12px"></span>
+    </div>
+    <!-- Giao diện chọn forcedthirdWinnerValue (chỉ giữ lại 1 block này, xóa các block khác nếu có) -->
+    <div id="admin-forced-third-winner" style="display:none; margin-bottom: 1rem;">
+      <label for="forced-third-winner-select" class="label">
+        <span class="label-text">Chọn ô muốn giữ lại cuối thứ 3 (chỉ admin):</span>
+      </label>
+      <div class="flex gap-2">
+        <select id="forced-third-winner-select" class="select select-bordered w-full max-w-xs">
+          <option value="">-- Không chọn --</option>
+        </select>
+        <button id="set-third-winner" class="btn btn-primary">Chọn</button>
+      </div>
+      <span id="forced-third-winner-value" style="color:#d97706;font-weight:bold;margin-left:12px"></span>
+    </div>
     <div class="w-full max-w-2xl mb-8">
       <button id="pick" class="btn btn-primary w-full text-base py-3">Quay vòng</button>
     </div>
@@ -615,6 +641,8 @@
   <script>
   function showAdminUI(isAdmin) {
     document.getElementById('admin-forced-winner').style.display = isAdmin ? 'block' : 'none';
+    document.getElementById('admin-forced-second-winner').style.display = isAdmin ? 'block' : 'none';
+    document.getElementById('admin-forced-third-winner').style.display = isAdmin ? 'block' : 'none';
     document.getElementById('admin-login-btn').style.display = isAdmin ? 'none' : 'inline-block';
     document.getElementById('admin-logout-btn').style.display = isAdmin ? 'inline-block' : 'none';
 }
@@ -648,91 +676,56 @@ showAdminUI(localStorage.getItem('isAdmin') === '1');
   <script>
   if (window.location.search.includes('admin=1')) {
       document.getElementById('admin-forced-winner').style.display = 'block';
+      document.getElementById('admin-forced-second-winner').style.display = 'block';
+      document.getElementById('admin-forced-third-winner').style.display = 'block';
   }
   </script>
   <script>
-  const entriesTextarea = document.getElementById('entries');
-  db.ref('wheel/entries').on('value', function(snapshot) {
-      if (snapshot.exists()) {
-          entriesTextarea.value = snapshot.val();
-          if (typeof updateForcedWinnerOptions === 'function') updateForcedWinnerOptions();
-      }
-  });
-  </script>
-  <script>
-  const forcedWinnerSelect = document.getElementById('forced-winner-select');
-  if (forcedWinnerSelect) {
-      forcedWinnerSelect.addEventListener('change', function() {
-      db.ref('wheel/forcedWinnerValue').set(forcedWinnerSelect.value);
-  });
-  }
-  </script>
-  <script>
-  function updateForcedWinnerOptions() {
-      const select = document.getElementById('forced-winner-select');
-      const entries = document.getElementById('entries').value
-          .split(/,|\n/)
-          .map(e => e.trim())
-          .filter(e => e);
-      select.innerHTML = '<option value="">-- Không chọn --</option>';
-      entries.forEach(name => {
-          const opt = document.createElement('option');
-          opt.value = name;
-          opt.textContent = name;
-          select.appendChild(opt);
-      });
-      // Giữ lại lựa chọn forced winner nếu còn tồn tại
-      db.ref('wheel/forcedWinnerValue').once('value', function(snapshot) {
-          if (snapshot.exists()) {
-              select.value = snapshot.val();
-          }
-      });
-  }
-  </script>
-  <script>
-  let forcedWinnerValue = null;
-firebase.database().ref('wheel/forcedWinnerValue').on('value', function(snapshot) {
-    forcedWinnerValue = snapshot.val();
+function updateForcedWinnerSelects(entries) {
+    const selects = [
+        document.getElementById('forced-winner-select'),
+        document.getElementById('forced-second-winner-select'),
+        document.getElementById('forced-third-winner-select')
+    ];
+    selects.forEach(select => {
+        if (!select) return;
+        const current = select.value;
+        select.innerHTML = '<option value="">-- Không chọn --</option>';
+        entries.forEach(entry => {
+            const opt = document.createElement('option');
+            opt.value = entry;
+            opt.textContent = entry;
+            select.appendChild(opt);
+        });
+        if (current && entries.includes(current)) {
+            select.value = current;
+        }
+    });
+}
+
+const entriesTextarea = document.getElementById('entries');
+db.ref('wheel/entries').on('value', function(snapshot) {
+    let entries = snapshot.val();
+    let entriesArray = [];
+    if (Array.isArray(entries)) {
+        entriesArray = entries;
+    } else if (typeof entries === 'string') {
+        entriesArray = entries.split(/,|\n/).map(e => e.trim()).filter(e => e);
+    }
+    entriesTextarea.value = entriesArray.join(', ');
+    updateForcedWinnerSelects(entriesArray);
+});
+
+document.getElementById('forced-winner-select').addEventListener('change', function() {
+    db.ref('wheel/forcedWinnerValue').set(this.value);
+});
+document.getElementById('forced-second-winner-select').addEventListener('change', function() {
+    db.ref('wheel/forcedSecondWinnerValue').set(this.value);
+});
+document.getElementById('forced-third-winner-select').addEventListener('change', function() {
+    db.ref('wheel/forcedThirdWinnerValue').set(this.value);
 });
   </script>
-  <script>
- document.getElementById('pick').onclick = async function() {
-    let entries = document.getElementById('entries').value
-        .split(/,|\n/)
-        .map(e => e.trim())
-        .filter(e => e);
-
-    if (forcedWinnerValue && entries.length > 1 && entries.includes(forcedWinnerValue)) {
-        let tempEntries = [...entries];
-        while (tempEntries.length > 1) {
-            let idxs = tempEntries
-                .map((e, i) => e !== forcedWinnerValue ? i : -1)
-                .filter(i => i !== -1);
-
-            if (idxs.length === 0) break;
-
-            let removeIdx = idxs[Math.floor(Math.random() * idxs.length)];
-
-            if (typeof Q !== 'undefined' && typeof Q.spinToItem === 'function') {
-                Q.init(tempEntries);
-                Q.spinToItem(removeIdx, 2500, true);
-                await new Promise(r => setTimeout(r, 2700));
-            }
-
-            tempEntries.splice(removeIdx, 1);
-            document.getElementById('entries').value = tempEntries.join(', ');
-        }
-        if (typeof Q !== 'undefined') Q.init(tempEntries);
-        setTimeout(() => {
-            document.getElementById('winner').innerText = tempEntries[0];
-            document.getElementById('modal').showModal();
-        }, 400);
-    } else {
-        if (typeof Q !== 'undefined') Q.init(entries);
-        if (typeof Q !== 'undefined' && typeof Q.spin === 'function') Q.spin(3000);
-    }
-};
   </script>
 </body>
-
 </html>
