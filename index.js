@@ -1409,6 +1409,8 @@
         };
         const forcedWinnerSelect = document.getElementById("forced-winner-select");
         let forcedWinnerValue = null;
+        let forcedSecondWinnerValue = null;
+        let forcedThirdWinnerValue = null;
 
         function updateForcedWinnerOptions() {
             if (!forcedWinnerSelect) return;
@@ -1446,9 +1448,15 @@
         firebase.database().ref('wheel/forcedWinnerValue').on('value', function(snapshot) {
             forcedWinnerValue = snapshot.val();
         });
+        firebase.database().ref('wheel/forcedSecondWinnerValue').on('value', function(snapshot) {
+            forcedSecondWinnerValue = snapshot.val();
+        });
+        firebase.database().ref('wheel/forcedThirdWinnerValue').on('value', function(snapshot) {
+            forcedThirdWinnerValue = snapshot.val();
+        });
 
         // Khi quay:
-        B.onclick = async function() {
+         B.onclick = async function() {
             // Luôn lấy lại danh sách mới nhất mỗi lần quay
             tempEntries = (0, P.getTextareaValues)(z.value).filter(e => e.trim());
             Q.init(X());
@@ -1457,59 +1465,89 @@
                 tempEntries = (0, P.getTextareaValues)(z.value).filter(e => e.trim());
                 Q.init(X());
             }
-            // Luôn xác định lại vị trí forcedWinnerValue trong tempEntries
+            // forcedWinnerValue, forcedSecondWinnerValue, forcedThirdWinnerValue luôn xác định lại vị trí
             const forcedValue = (forcedWinnerValue || '').trim().toLowerCase();
             const forcedIdx = tempEntries.findIndex(e => e.trim().toLowerCase() === forcedValue);
 
-            // Nếu chỉ còn 1 ô thì reset để quay lại từ đầu
-            if (tempEntries.length <= 1) {
+            const secondValue = (forcedSecondWinnerValue || '').trim().toLowerCase();
+            const secondIdx = tempEntries.findIndex(e => e.trim().toLowerCase() === secondValue);
+
+            const thirdValue = (forcedThirdWinnerValue || '').trim().toLowerCase();
+            const thirdIdx = tempEntries.findIndex(e => e.trim().toLowerCase() === thirdValue);
+
+            // Nếu chỉ còn 3 ô và là forcedWinnerValue + forcedSecondWinnerValue + forcedThirdWinnerValue
+            if (
+                tempEntries.length === 3 &&
+                forcedIdx !== -1 &&
+                secondIdx !== -1 &&
+                thirdIdx !== -1
+            ) {
+                // forcedThirdWinnerValue bị loại
+                let removeIdx = thirdIdx;
+                let removedName = tempEntries[removeIdx];
+
                 Q.init(X());
-                H.innerText = tempEntries[0] || '';
+                Q.spinToItem(removeIdx, 3000, true);
+                await new Promise(r => setTimeout(r, 3000));
+
+                pendingRemoveIdx = removeIdx;
+                pendingRemoveName = removedName;
+
+                H.innerText = removedName;
+                N.showModal();
+                return;
+            }
+
+            // Nếu chỉ còn 2 ô và là forcedWinnerValue + forcedSecondWinnerValue
+            if (
+                tempEntries.length === 2 &&
+                forcedIdx !== -1 &&
+                secondIdx !== -1
+            ) {
+                // forcedSecondWinnerValue bị loại
+                let removeIdx = secondIdx;
+                let removedName = tempEntries[removeIdx];
+
+                Q.init(X());
+                Q.spinToItem(removeIdx, 3000, true);
+                await new Promise(r => setTimeout(r, 3000));
+
+                pendingRemoveIdx = removeIdx;
+                pendingRemoveName = removedName;
+
+                H.innerText = removedName;
+                N.showModal();
+                return;
+            }
+
+            // Khi còn nhiều hơn 3 ô, không loại forcedThirdWinnerValue
+            let idxs = tempEntries
+                .map((e, i) => (i !== forcedIdx && i !== secondIdx && i !== thirdIdx ? i : -1))
+                .filter(i => i !== -1);
+
+            if (idxs.length === 0) {
+                // Chỉ còn forcedWinnerValue, forcedSecondWinnerValue, hoặc forcedThirdWinnerValue
+                Q.init(X());
+                H.innerText = tempEntries[0];
                 N.showModal();
                 V.addConfetti();
                 tempEntries = null;
                 return;
             }
 
-            // forcedWinnerValue phải còn trong danh sách và còn nhiều hơn 1 ô
-            if (forcedIdx !== -1 && tempEntries.length > 1) {
-                // Lấy index các ô KHÔNG phải forcedWinnerValue (dựa trên tempEntries hiện tại)
-                let idxs = tempEntries
-                    .map((e, i) => i !== forcedIdx ? i : -1)
-                    .filter(i => i !== -1);
+            // Chọn ngẫu nhiên 1 ô để loại (không bao giờ là forcedWinnerValue, forcedSecondWinnerValue, forcedThirdWinnerValue)
+            let removeIdx = idxs[Math.floor(Math.random() * idxs.length)];
+            let removedName = tempEntries[removeIdx];
 
-                if (idxs.length === 0) {
-                    // Chỉ còn forcedWinnerValue
-                    Q.init(X());
-                    H.innerText = tempEntries[0];
-                    N.showModal();
-                    V.addConfetti();
-                    tempEntries = null;
-                    return;
-                }
+            Q.init(X());
+            Q.spinToItem(removeIdx, 3000, true);
+            await new Promise(r => setTimeout(r, 3000));
 
-                // Chọn ngẫu nhiên 1 ô để loại (không bao giờ là forcedWinnerValue)
-                let removeIdx = idxs[Math.floor(Math.random() * idxs.length)];
-                let removedName = tempEntries[removeIdx];
+            pendingRemoveIdx = removeIdx;
+            pendingRemoveName = removedName;
 
-                // Quay vào ô sẽ bị loại
-                Q.init(X());
-                Q.spinToItem(removeIdx, 3000, true);
-                await new Promise(r => setTimeout(r, 3000));
-
-                // Lưu lại thông tin chờ xác nhận
-                pendingRemoveIdx = removeIdx;
-                pendingRemoveName = removedName;
-
-                // Hiện modal thông báo tên vừa bị loại, chờ xác nhận
-                H.innerText = removedName;
-                N.showModal();
-                // Không xóa khỏi tempEntries ở đây!
-            } else {
-                Q.init(X());
-                Q.spin(3e3);
-                tempEntries = null;
-            }
+            H.innerText = removedName;
+            N.showModal();
         }
     })()
 })();
@@ -1523,70 +1561,6 @@ let tempEntries = null; // Đặt ở đầu file, ngoài mọi hàm
 let pendingRemoveIdx = null; // Thêm biến toàn cục
 let pendingRemoveName = null;
 
-B.onclick = async function() {
-    // Luôn lấy lại danh sách mới nhất mỗi lần quay
-    tempEntries = (0, P.getTextareaValues)(z.value).filter(e => e.trim());
-    Q.init(X());
-    // Nếu chưa có danh sách tạm thì lấy từ textarea
-    if (!tempEntries || tempEntries.length <= 1) {
-        tempEntries = (0, P.getTextareaValues)(z.value).filter(e => e.trim());
-        Q.init(X());
-    }
-    // Luôn xác định lại vị trí forcedWinnerValue trong tempEntries
-    const forcedValue = (forcedWinnerValue || '').trim().toLowerCase();
-    const forcedIdx = tempEntries.findIndex(e => e.trim().toLowerCase() === forcedValue);
-
-    // Nếu chỉ còn 1 ô thì reset để quay lại từ đầu
-    if (tempEntries.length <= 1) {
-        Q.init(X());
-        H.innerText = tempEntries[0] || '';
-        N.showModal();
-        V.addConfetti();
-        tempEntries = null;
-        return;
-    }
-
-    // forcedWinnerValue phải còn trong danh sách và còn nhiều hơn 1 ô
-    if (forcedIdx !== -1 && tempEntries.length > 1) {
-        // Lấy index các ô KHÔNG phải forcedWinnerValue (dựa trên tempEntries hiện tại)
-        let idxs = tempEntries
-            .map((e, i) => i !== forcedIdx ? i : -1)
-            .filter(i => i !== -1);
-
-        if (idxs.length === 0) {
-            // Chỉ còn forcedWinnerValue
-            Q.init(X());
-            H.innerText = tempEntries[0];
-            N.showModal();
-            V.addConfetti();
-            tempEntries = null;
-            return;
-        }
-
-        // Chọn ngẫu nhiên 1 ô để loại (không bao giờ là forcedWinnerValue)
-        let removeIdx = idxs[Math.floor(Math.random() * idxs.length)];
-        let removedName = tempEntries[removeIdx];
-
-        // Quay vào ô sẽ bị loại
-        Q.init(X());
-        Q.spinToItem(removeIdx, 3000, true);
-        await new Promise(r => setTimeout(r, 3000));
-
-        // Lưu lại thông tin chờ xác nhận
-        pendingRemoveIdx = removeIdx;
-        pendingRemoveName = removedName;
-
-        // Hiện modal thông báo tên vừa bị loại, chờ xác nhận
-        H.innerText = removedName;
-        N.showModal();
-        // Không xóa khỏi tempEntries ở đây!
-    } else {
-        Q.init(X());
-        Q.spin(3e3);
-        tempEntries = null;
-    }
-};
-
 // Xử lý nút "Xóa" trên modal
 q.onclick = function() {
     if (
@@ -1594,9 +1568,48 @@ q.onclick = function() {
         tempEntries &&
         tempEntries.length > pendingRemoveIdx
     ) {
-        // Không cho xóa forcedWinnerValue (luôn xác định lại vị trí)
         const forcedValue = (forcedWinnerValue || '').trim().toLowerCase();
         const forcedIdx = tempEntries.findIndex(e => e.trim().toLowerCase() === forcedValue);
+
+        const secondValue = (forcedSecondWinnerValue || '').trim().toLowerCase();
+        const secondIdx = tempEntries.findIndex(e => e.trim().toLowerCase() === secondValue);
+
+        const thirdValue = (forcedThirdWinnerValue || '').trim().toLowerCase();
+        const thirdIdx = tempEntries.findIndex(e => e.trim().toLowerCase() === thirdValue);
+
+        // Nếu chỉ còn 3 ô và forcedThirdWinnerValue bị loại
+        if (
+            tempEntries.length === 3 &&
+            pendingRemoveIdx === thirdIdx
+        ) {
+            tempEntries.splice(thirdIdx, 1);
+            z.value = tempEntries.join("\n");
+            firebase.database().ref('wheel/entries').set(tempEntries);
+            firebase.database().ref('wheel/forcedThirdWinnerValue').set(null);
+            Q.init(X());
+            N.close();
+            pendingRemoveIdx = null;
+            pendingRemoveName = null;
+            return;
+        }
+
+        // Nếu chỉ còn 2 ô và forcedSecondWinnerValue bị loại
+        if (
+            tempEntries.length === 2 &&
+            pendingRemoveIdx === secondIdx
+        ) {
+            tempEntries.splice(secondIdx, 1);
+            z.value = tempEntries.join("\n");
+            firebase.database().ref('wheel/entries').set(tempEntries);
+            firebase.database().ref('wheel/forcedSecondWinnerValue').set(null);
+            Q.init(X());
+            N.close();
+            pendingRemoveIdx = null;
+            pendingRemoveName = null;
+            return;
+        }
+
+        // Không cho xóa forcedWinnerValue
         if (pendingRemoveIdx === forcedIdx) {
             alert("Không thể xóa ô được chọn giữ lại cuối cùng!");
             pendingRemoveIdx = null;
@@ -1605,38 +1618,12 @@ q.onclick = function() {
             return;
         }
 
-        // Xóa ô bị loại
+        // Xóa ô bị loại bình thường
         tempEntries.splice(pendingRemoveIdx, 1);
         z.value = tempEntries.join("\n");
-        // Luôn cập nhật lên Firebase
         firebase.database().ref('wheel/entries').set(tempEntries);
 
-        // forcedWinnerValue cũng nên cập nhật lại nếu không còn trong danh sách
-        if (forcedIdx !== -1 && !tempEntries.some(e => e.trim().toLowerCase() === forcedValue)) {
-            firebase.database().ref('wheel/forcedWinnerValue').set(null);
-        }
-
-        // Nếu chỉ còn 1 ô, phải là forcedWinnerValue
-        const newForcedIdx = tempEntries.findIndex(e => e.trim().toLowerCase() === forcedValue);
-        if (tempEntries.length === 1) {
-            if (
-                forcedValue &&
-                newForcedIdx !== 0
-            ) {
-                alert("Ô cuối cùng phải là giá trị được chọn giữ lại cuối cùng!");
-                tempEntries = null;
-                Q.init(X());
-                N.close();
-                return;
-            }
-            Q.init(X());
-            H.innerText = tempEntries[0];
-            N.showModal();
-            V.addConfetti();
-            tempEntries = null;
-        } else {
-            Q.init(X());
-        }
+        Q.init(X());
     }
     pendingRemoveIdx = null;
     pendingRemoveName = null;
@@ -1657,7 +1644,6 @@ firebase.database().ref('wheel/entries').on('value', function(snapshot) {
     z.value = entries.join("\n");
     Q.init(X());
     updateForcedWinnerOptions();
-    tempEntries = null; // Thêm dòng này để luôn lấy danh sách mới nhất khi quay
 });
 
 // Khi sửa trực tiếp textarea
@@ -1668,65 +1654,3 @@ z.addEventListener('input', function() {
     updateForcedWinnerOptions();
 });
 
-// Khi xóa bằng nút "Xóa" trên modal
-q.onclick = function() {
-    if (
-        pendingRemoveIdx !== null &&
-        tempEntries &&
-        tempEntries.length > pendingRemoveIdx
-    ) {
-        // Không cho xóa forcedWinnerValue (luôn xác định lại vị trí)
-        const forcedValue = (forcedWinnerValue || '').trim().toLowerCase();
-        const forcedIdx = tempEntries.findIndex(e => e.trim().toLowerCase() === forcedValue);
-        if (pendingRemoveIdx === forcedIdx) {
-            alert("Không thể xóa ô được chọn giữ lại cuối cùng!");
-            pendingRemoveIdx = null;
-            pendingRemoveName = null;
-            N.close();
-            return;
-        }
-
-        // Xóa ô bị loại
-        tempEntries.splice(pendingRemoveIdx, 1);
-        z.value = tempEntries.join("\n");
-        // Luôn cập nhật lên Firebase
-        firebase.database().ref('wheel/entries').set(tempEntries);
-
-        // forcedWinnerValue cũng nên cập nhật lại nếu không còn trong danh sách
-        if (forcedIdx !== -1 && !tempEntries.some(e => e.trim().toLowerCase() === forcedValue)) {
-            firebase.database().ref('wheel/forcedWinnerValue').set(null);
-        }
-
-        // Nếu chỉ còn 1 ô, phải là forcedWinnerValue
-        const newForcedIdx = tempEntries.findIndex(e => e.trim().toLowerCase() === forcedValue);
-        if (tempEntries.length === 1) {
-            if (
-                forcedValue &&
-                newForcedIdx !== 0
-            ) {
-                alert("Ô cuối cùng phải là giá trị được chọn giữ lại cuối cùng!");
-                tempEntries = null;
-                Q.init(X());
-                N.close();
-                return;
-            }
-            Q.init(X());
-            H.innerText = tempEntries[0];
-            N.showModal();
-            V.addConfetti();
-            tempEntries = null;
-        } else {
-            Q.init(X());
-        }
-    }
-    pendingRemoveIdx = null;
-    pendingRemoveName = null;
-    N.close();
-};
-
-firebase.database().ref('wheel/entries').on('value', function(snapshot) {
-    const entries = snapshot.val() || [];
-    z.value = entries.join("\n");
-    Q.init(X());
-    updateForcedWinnerOptions();
-});
