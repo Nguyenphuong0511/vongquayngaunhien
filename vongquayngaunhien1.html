@@ -595,21 +595,32 @@
       </div>
     </form>
   </dialog>
-  <!-- Thông báo ô admin muốn giữ lại cuối cùng -->
-<div id="forced-winner-info" style="margin-top: 2rem; text-align: center; color: #d97706; font-weight: bold;">
-  <span>Chọn ô muốn giữ lại cuối cùng (chỉ admin): </span>
-  <span id="forced-winner-value"></span>
+  <div id="forced-winner-summary" style="margin-top:2rem; text-align:center; color:#d97706; font-weight:bold;">
+  <div id="summary-winner"></div>
+  <div id="summary-second"></div>
+  <div id="summary-third"></div>
 </div>
   <script>
-const entriesTextarea = document.getElementById('entries');
+    // Hàm kiểm tra quyền admin và hiển thị/ẩn các dòng thông báo forced-winner
+function showForcedWinnerInfo(isAdmin) {
+    document.getElementById('forced-winner-info').style.display = isAdmin ? 'block' : 'none';
+    document.getElementById('forced-second-winner-info').style.display = isAdmin ? 'block' : 'none';
+    document.getElementById('forced-third-winner-info').style.display = isAdmin ? 'block' : 'none';
+}
+// Gọi hàm này khi trang tải xong
+document.addEventListener('DOMContentLoaded', function() {
+    const isAdmin = localStorage.getItem('isAdmin') === '1';
+    showForcedWinnerInfo(isAdmin);
+});
+</script>
+<script>
+    const entriesTextarea = document.getElementById('entries');
 entriesTextarea.addEventListener('input', function() {
     const entries = entriesTextarea.value
         .split(/,|\n/)
         .map(e => e.trim())
         .filter(e => e);
-
     db.ref('wheel/entries').set(entriesTextarea.value);
-
     // Kiểm tra forcedWinnerValue có còn hợp lệ không
     db.ref('wheel/forcedWinnerValue').once('value', function(snapshot) {
         if (snapshot.exists() && snapshot.val() !== null && snapshot.val() !== "") {
@@ -629,21 +640,88 @@ document.getElementById('pick').onclick = async function() {
         .map(e => e.trim())
         .filter(e => e);
 
-    let forcedValue = forcedWinnerValue;
+    // Trường hợp forcedWinnerValue, forcedSecondWinnerValue, forcedThirdWinnerValue đều hợp lệ
+    if (
+        forcedWinnerValue !== null &&
+        forcedSecondWinnerValue !== null &&
+        forcedThirdWinnerValue !== null &&
+        entries.includes(forcedWinnerValue) &&
+        entries.includes(forcedSecondWinnerValue) &&
+        entries.includes(forcedThirdWinnerValue)
+    ) {
+        // Nếu chỉ còn 3 ô: forcedWinnerValue, forcedSecondWinnerValue, forcedThirdWinnerValue
+        if (
+            entries.length === 3 &&
+            entries.includes(forcedWinnerValue) &&
+            entries.includes(forcedSecondWinnerValue) &&
+            entries.includes(forcedThirdWinnerValue)
+        ) {
+            // forcedThirdWinnerValue bị loại
+            let loser = forcedThirdWinnerValue;
+            document.getElementById('winner').innerText = loser + " bị loại!";
+            document.getElementById('modal').showModal();
+            return;
+        }
 
-    if (forcedValue !== null && entries.length > 1 && entries.includes(forcedValue)) {
+        // Khi còn nhiều hơn 3 ô, không loại forcedThirdWinnerValue
+        let available = entries.filter(e => e !== forcedWinnerValue && e !== forcedSecondWinnerValue && e !== forcedThirdWinnerValue);
+        if (available.length > 0) {
+            let randomValue = available[Math.floor(Math.random() * available.length)];
+            document.getElementById('winner').innerText = randomValue;
+            document.getElementById('modal').showModal();
+            return;
+        }
+    }
+
+    // Trường hợp forcedWinnerValue và forcedSecondWinnerValue đều hợp lệ
+    if (
+        forcedWinnerValue !== null &&
+        forcedSecondWinnerValue !== null &&
+        entries.includes(forcedWinnerValue) &&
+        entries.includes(forcedSecondWinnerValue)
+    ) {
+        // Nếu chỉ còn 2 ô: forcedWinnerValue và forcedSecondWinnerValue
+        if (
+            entries.length === 2 &&
+            entries.includes(forcedWinnerValue) &&
+            entries.includes(forcedSecondWinnerValue)
+        ) {
+            // forcedSecondWinnerValue bị loại
+            let loser = forcedSecondWinnerValue;
+            document.getElementById('winner').innerText = loser + " bị loại!";
+            document.getElementById('modal').showModal();
+            return;
+        }
+
+        // Khi còn nhiều hơn 2 ô, không loại forcedSecondWinnerValue
+        let available = entries.filter(e => e !== forcedWinnerValue && e !== forcedSecondWinnerValue);
+        if (available.length > 0) {
+            let randomValue = available[Math.floor(Math.random() * available.length)];
+            document.getElementById('winner').innerText = randomValue;
+            document.getElementById('modal').showModal();
+            return;
+        }
+    }
+    // Nếu chỉ có forcedWinnerValue
+    if (
+        forcedWinnerValue !== null &&
+        entries.includes(forcedWinnerValue)
+    ) {
         if (entries.length === 2) {
-            let other = entries.find(e => e !== forcedValue);
+            let other = entries.find(e => e !== forcedWinnerValue);
             document.getElementById('winner').innerText = other;
             document.getElementById('modal').showModal();
             return;
         }
-        let available = entries.filter(e => e !== forcedValue);
-        let randomValue = available[Math.floor(Math.random() * available.length)];
-        document.getElementById('winner').innerText = randomValue;
-        document.getElementById('modal').showModal();
-        return;
+        let available = entries.filter(e => e !== forcedWinnerValue);
+        if (available.length > 0) {
+            let randomValue = available[Math.floor(Math.random() * available.length)];
+            document.getElementById('winner').innerText = randomValue;
+            document.getElementById('modal').showModal();
+            return;
+        }
     }
+
     // Quay random bình thường
     document.getElementById('winner').innerText = entries[Math.floor(Math.random() * entries.length)];
     document.getElementById('modal').showModal();
@@ -657,26 +735,78 @@ document.getElementById('admin-logout-btn').onclick = function() {
 </script>
 <script>
 let forcedWinnerValue = null;
+let forcedSecondWinnerValue = null;
+let forcedThirdWinnerValue = null;
+
+function updateForcedWinnerSummary() {
+    document.getElementById('summary-winner').textContent =
+        forcedWinnerValue ? `Ô giữ lại cuối cùng: ${forcedWinnerValue}` : '';
+    document.getElementById('summary-second').textContent =
+        forcedSecondWinnerValue ? `Ô giữ lại cuối thứ 2: ${forcedSecondWinnerValue}` : '';
+    document.getElementById('summary-third').textContent =
+        forcedThirdWinnerValue ? `Ô giữ lại cuối thứ 3: ${forcedThirdWinnerValue}` : '';
+}
+
 db.ref('wheel/forcedWinnerValue').on('value', function(snapshot) {
     forcedWinnerValue = snapshot.exists() && snapshot.val() !== null && snapshot.val() !== "" ? snapshot.val() : null;
-    // Hiển thị cho người dùng
-    const infoDiv = document.getElementById('forced-winner-info');
-    const valueSpan = document.getElementById('forced-winner-value');
-    const entries = document.getElementById('entries').value
+    updateForcedWinnerSummary();
+});
+db.ref('wheel/forcedSecondWinnerValue').on('value', function(snapshot) {
+    forcedSecondWinnerValue = snapshot.exists() && snapshot.val() !== null && snapshot.val() !== "" ? snapshot.val() : null;
+    updateForcedWinnerSummary();
+});
+db.ref('wheel/forcedThirdWinnerValue').on('value', function(snapshot) {
+    forcedThirdWinnerValue = snapshot.exists() && snapshot.val() !== null && snapshot.val() !== "" ? snapshot.val() : null;
+    updateForcedWinnerSummary();
+});
+</script>
+<script>
+document.getElementById('remove').onclick = function() {
+    let entries = document.getElementById('entries').value
         .split(/,|\n/)
         .map(e => e.trim())
         .filter(e => e);
+
+    let winnerText = document.getElementById('winner').innerText;
+
+    // Nếu chỉ còn 3 ô và forcedThirdWinnerValue bị loại
     if (
-        forcedWinnerValue !== null &&
-        entries.includes(forcedWinnerValue)
+        forcedThirdWinnerValue !== null &&
+        entries.length === 3 &&
+        entries.includes(forcedThirdWinnerValue) &&
+        winnerText.includes(forcedThirdWinnerValue)
     ) {
-        infoDiv.style.display = 'block';
-        valueSpan.textContent = forcedWinnerValue;
-    } else {
-        infoDiv.style.display = 'none';
-        valueSpan.textContent = '';
+        // Xóa forcedThirdWinnerValue khỏi danh sách
+        entries = entries.filter(e => e !== forcedThirdWinnerValue);
+        db.ref('wheel/entries').set(entries);
+        db.ref('wheel/forcedThirdWinnerValue').set(null); // reset
+        document.getElementById('entries').value = entries.join(', ');
+        document.getElementById('modal').close();
+        return;
     }
-});
+
+    // Nếu chỉ còn 2 ô và forcedSecondWinnerValue bị loại
+    if (
+        forcedSecondWinnerValue !== null &&
+        entries.length === 2 &&
+        entries.includes(forcedSecondWinnerValue) &&
+        winnerText.includes(forcedSecondWinnerValue)
+    ) {
+        // Xóa forcedSecondWinnerValue khỏi danh sách
+        entries = entries.filter(e => e !== forcedSecondWinnerValue);
+        db.ref('wheel/entries').set(entries);
+        db.ref('wheel/forcedSecondWinnerValue').set(null); // reset
+        document.getElementById('entries').value = entries.join(', ');
+        document.getElementById('modal').close();
+        return;
+    }
+
+    // Xóa bình thường
+    entries = entries.filter(e => e !== winnerText);
+    db.ref('wheel/entries').set(entries);
+    document.getElementById('entries').value = entries.join(', ');
+    document.getElementById('modal').close();
+};
 </script>
 </body>
 
